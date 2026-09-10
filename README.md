@@ -95,7 +95,11 @@ A visible disclaimer ensures responsible usage.
 6. LLM generates structured response
 7. Results displayed in UI
 
+
+<img width="3376" height="1446" alt="Untitled Diagram drawio (1)" src="https://github.com/user-attachments/assets/88087898-409f-4127-b103-88ff059307b0" />
+
 ---
+
 
 ## 📦 Installation & Setup
 
