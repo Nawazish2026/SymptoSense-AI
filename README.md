@@ -158,41 +158,7 @@ This project is fully compatible with **Vercel**.
 ## ⚠️ Medical Disclaimer
 
 SymptoSense AI does **not** provide medical diagnosis, treatment, or prescriptions. Always consult a qualified healthcare professional for medical concerns.
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            SYMPTOENSE AI ARCHITECTURE                       │
-└─────────────────────────────────────────────────────────────────────────────┘
-                              ┌──────────────┐
-                              │    USER      │
-                              │   BROWSER    │
-                              └──────┬───────┘
-                                     │ HTTPS
-                                     ▼
-                    ┌────────────────────────────────┐
-                    │      FRONTEND (Next.js)        │
-                    │  • React Components            │
-                    │  • State Management            │
-                    └────────────┬───────────────────┘
-                                 │ POST /api/analyze
-                                 ▼
-                    ┌────────────────────────────────┐
-                    │  BACKEND (Next.js API Routes)  │
-                    │  • Validation & Routing        │
-                    │  • RAG Pipeline Service        │
-                    └────────┬───────────────────────┘
-                             │
-         ┌───────────────────┼───────────────────┐
-         ▼                   ▼                   ▼
-    ┌─────────┐         ┌──────────┐      ┌──────────┐
-    │ Gemini  │         │ Pinecone │      │  Gemini  │
-    │   2.0   │         │ Vector   │      │  Flash   │
-    │Embedding│         │   DB     │      │ Model    │
-    └─────────┘         └──────────┘      └──────────┘
-                             │ Returns JSON
-                             ▼
-                    ┌────────────────────────────────┐
-                    │   MONGODB ATLAS DATABASE       │
-                    │  • Asynchronous History Save   │
-                    └────────────────────────────────┘
+
  Architectural Decisions: Why This Design is Better
 
 RAG over Pure LLM (Reduced Hallucinations): Medical information requires strict accuracy. Instead of relying solely on an LLM's internal weights (which can hallucinate), I implemented a Retrieval-Augmented Generation (RAG) pipeline. By embedding the user's symptoms via Gemini 2.0 and querying a Pinecone Vector DB, the LLM is forced to ground its response in actual, retrieved medical literature.
