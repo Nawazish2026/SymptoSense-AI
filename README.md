@@ -158,26 +158,51 @@ This project is fully compatible with **Vercel**.
 ## ⚠️ Medical Disclaimer
 
 SymptoSense AI does **not** provide medical diagnosis, treatment, or prescriptions. Always consult a qualified healthcare professional for medical concerns.
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            SYMPTOENSE AI ARCHITECTURE                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+                              ┌──────────────┐
+                              │    USER      │
+                              │   BROWSER    │
+                              └──────┬───────┘
+                                     │ HTTPS
+                                     ▼
+                    ┌────────────────────────────────┐
+                    │      FRONTEND (Next.js)        │
+                    │  • React Components            │
+                    │  • State Management            │
+                    └────────────┬───────────────────┘
+                                 │ POST /api/analyze
+                                 ▼
+                    ┌────────────────────────────────┐
+                    │  BACKEND (Next.js API Routes)  │
+                    │  • Validation & Routing        │
+                    │  • RAG Pipeline Service        │
+                    └────────┬───────────────────────┘
+                             │
+         ┌───────────────────┼───────────────────┐
+         ▼                   ▼                   ▼
+    ┌─────────┐         ┌──────────┐      ┌──────────┐
+    │ Gemini  │         │ Pinecone │      │  Gemini  │
+    │   2.0   │         │ Vector   │      │  Flash   │
+    │Embedding│         │   DB     │      │ Model    │
+    └─────────┘         └──────────┘      └──────────┘
+                             │ Returns JSON
+                             ▼
+                    ┌────────────────────────────────┐
+                    │   MONGODB ATLAS DATABASE       │
+                    │  • Asynchronous History Save   │
+                    └────────────────────────────────┘
+ Architectural Decisions: Why This Design is Better
 
----
+RAG over Pure LLM (Reduced Hallucinations): Medical information requires strict accuracy. Instead of relying solely on an LLM's internal weights (which can hallucinate), I implemented a Retrieval-Augmented Generation (RAG) pipeline. By embedding the user's symptoms via Gemini 2.0 and querying a Pinecone Vector DB, the LLM is forced to ground its response in actual, retrieved medical literature.
 
-## 🎯 Why This Project Matters
+Decoupled Client-Server Architecture in Next.js: By utilizing Next.js, I achieved a seamless integration of frontend React components and backend API routes. The edge-compatible API routes ensure fast execution, while the client-side rendering handles the dynamic Framer Motion UI without blocking the server.
 
-This project demonstrates:
+Graceful Degradation (Resilience): The system is designed not to fail. If the Pinecone Vector DB goes down, the application catches the error and degrades gracefully, falling back to a direct Gemini LLM prompt or a mock "offline mode" response. The user never sees a raw 500 server crash.
 
-* Real-world GenAI application
-* RAG system design
-* AI safety considerations
-* Full-stack development
-* Production-style deployment
-
-Perfect for:
-
-* GenAI roles
-* Full-stack roles
-* AI product engineering
-
----
+Non-Blocking Database Operations: MongoDB Atlas is used for saving user history, but the database write operation is intentionally non-blocking. The API returns the AI results to the user immediately while the database saves the record asynchronously, ensuring zero latency penalty for the user.
+                    
 
 ## 📬 Future Improvements
 
